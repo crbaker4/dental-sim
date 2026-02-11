@@ -54,4 +54,35 @@ elif s["growth"] > 50:
         "choices": [
             ("Open second location", {"cash": -80000, "locations": 1, "stress": 10}),
             ("Hire more staff", {"cash": -10000, "growth": 10}),
-           
+            ("Save money", {"cash": 10000}),
+            ("Do nothing", {})
+        ]
+    }
+
+else:
+    event = {
+        "text": "Busy but stable month.",
+        "choices": [
+            ("Run marketing", {"cash": -5000, "growth": 10}),
+            ("Focus on profit", {"cash": 15000}),
+            ("Hire hygienist", {"cash": -6000, "growth": 5}),
+            ("Do nothing", {})
+        ]
+    }
+
+st.subheader(event["text"])
+
+# ---------- CHOICES ----------
+for label, effects in event["choices"]:
+    if st.button(label):
+        for k, v in effects.items():
+            s[k] = s.get(k, 0) + v
+
+        # monthly income
+        income = 20000 + (s["locations"] * 15000) + (s["growth"] * 200)
+        s["cash"] += income
+
+        s["month"] += 1
+        s["stress"] += random.randint(0,4)
+
+        st.rerun()
