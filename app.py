@@ -3,92 +3,51 @@ import random
 
 st.title("Dental Practice Career Mode")
 
-# ---------- START STATE ----------
+# ---------- STATE ----------
 if "state" not in st.session_state:
     st.session_state.state = {
         "month": 1,
-        "cash": 90000,
-        "patients": 1500,
-        "reputation": 60,
-        "staff_morale": 55,
-        "operatories": 4,
-        "hygienists": 1,
-        "assistants": 2,
-        "associates": 0,
+        "cash": 100000,
         "stress": 30,
-        "locations": 1,
-        "expansion_pressure": 20
+        "reputation": 60,
+        "locations": 1
     }
 
 s = st.session_state.state
 
-# ---------- DASHBOARD ----------
-st.write(f"Month: {s['month']}")
+st.write(f"Month {s['month']}")
 st.write(f"Cash: ${s['cash']}")
-st.write(f"Patients: {s['patients']}")
-st.write(f"Locations: {s['locations']}")
-st.write(f"Reputation: {s['reputation']}")
 st.write(f"Stress: {s['stress']}")
-st.write(f"Expansion pressure: {s['expansion_pressure']}")
+st.write(f"Reputation: {s['reputation']}")
+st.write(f"Locations: {s['locations']}")
 
 st.divider()
 
-# ---------- RANDOM EVENT ----------
-events = [
-    "Your brother wants to expand faster",
-    "Hygienist might quit",
-    "Schedule is overloaded",
-    "Bank offers loan",
-    "Lots of new patients coming in",
-    "Staff burnout rising"
+# ---------- SCENARIOS ----------
+scenarios = [
+
+{
+"text": "Your hygienist says they might quit.",
+"choices": [
+("Give them a raise", {"cash": -5000, "stress": -3}),
+("Let them leave", {"stress": 5}),
+("Hire replacement", {"cash": -3000}),
+("Ignore it", {"stress": 8})
 ]
+},
 
-event = random.choice(events)
-st.subheader(event)
+{
+"text": "Your brother wants to expand fast.",
+"choices": [
+("Open second location", {"cash": -80000, "locations": 1, "stress": 10}),
+("Wait and grow", {"stress": -2}),
+("Take bank loan", {"cash": 50000, "stress": 5}),
+("Say no", {"stress": 3})
+]
+},
 
-st.write("What do you do?")
-
-# ---------- CHOICES ----------
-if st.button("Expand capacity"):
-    s["operatories"] += 1
-    s["cash"] -= 20000
-    s["stress"] += 5
-    s["expansion_pressure"] -= 5
-    s["month"] += 1
-    st.rerun()
-
-if st.button("Hire associate"):
-    s["associates"] += 1
-    s["cash"] -= 7000
-    s["stress"] -= 2
-    s["month"] += 1
-    st.rerun()
-
-if st.button("Focus on profit"):
-    s["cash"] += 12000
-    s["reputation"] -= 2
-    s["month"] += 1
-    st.rerun()
-
-if st.button("Open second location"):
-    if s["cash"] > 80000:
-        s["locations"] += 1
-        s["cash"] -= 80000
-        s["stress"] += 12
-    else:
-        st.warning("Need more cash")
-    s["month"] += 1
-    st.rerun()
-
-if st.button("Stabilize team"):
-    s["staff_morale"] += 5
-    s["stress"] -= 3
-    s["month"] += 1
-    st.rerun()
-
-# ---------- MONTHLY ECONOMY ----------
-production = s["patients"] * 10 + s["associates"] * 22000
-expenses = s["hygienists"] * 4000 + s["assistants"] * 3000 + s["locations"] * 15000
-
-s["cash"] += production - expenses
-s["expansion_pressure"] += random.randint(1,4)
+{
+"text": "Schedule is overloaded.",
+"choices": [
+("Hire associate", {"cash": -7000, "stress": -4}),
+("Work more", {"stress":
