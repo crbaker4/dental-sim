@@ -1,23 +1,23 @@
 import streamlit as st
 import random
 
-st.title("Dental Empire Career Mode")
+st.title("Dental Practice Career Mode")
 
-# ---------- STATE ----------
+# ---------- START STATE ----------
 if "state" not in st.session_state:
     st.session_state.state = {
         "month": 1,
-        "cash": 120000,
-        "patients": 1400,
+        "cash": 90000,
+        "patients": 1500,
         "reputation": 60,
         "staff_morale": 55,
         "operatories": 4,
         "hygienists": 1,
         "assistants": 2,
         "associates": 0,
-        "stress": 25,
+        "stress": 30,
         "locations": 1,
-        "loan": 300000
+        "expansion_pressure": 20
     }
 
 s = st.session_state.state
@@ -27,42 +27,45 @@ st.write(f"Month: {s['month']}")
 st.write(f"Cash: ${s['cash']}")
 st.write(f"Patients: {s['patients']}")
 st.write(f"Locations: {s['locations']}")
-st.write(f"Loan: ${s['loan']}")
+st.write(f"Reputation: {s['reputation']}")
 st.write(f"Stress: {s['stress']}")
-st.write(f"Staff morale: {s['staff_morale']}")
+st.write(f"Expansion pressure: {s['expansion_pressure']}")
 
 st.divider()
 
 # ---------- RANDOM EVENT ----------
-event = random.choice([
-    "Hygienist wants a raise",
-    "Schedule is packed",
-    "Bank offers expansion loan",
-    "Associate wants to join",
-    "Lots of cancellations",
-    "Equipment breaks"
-])
+events = [
+    "Your brother wants to expand faster",
+    "Hygienist might quit",
+    "Schedule is overloaded",
+    "Bank offers loan",
+    "Lots of new patients coming in",
+    "Staff burnout rising"
+]
 
-st.subheader(f"Event: {event}")
+event = random.choice(events)
+st.subheader(event)
 
-# ---------- DECISIONS ----------
-if st.button("Invest in growth"):
+st.write("What do you do?")
+
+# ---------- CHOICES ----------
+if st.button("Expand capacity"):
     s["operatories"] += 1
-    s["loan"] += 50000
-    s["cash"] -= 10000
+    s["cash"] -= 20000
     s["stress"] += 5
+    s["expansion_pressure"] -= 5
     s["month"] += 1
     st.rerun()
 
 if st.button("Hire associate"):
     s["associates"] += 1
-    s["cash"] -= 8000
+    s["cash"] -= 7000
     s["stress"] -= 2
     s["month"] += 1
     st.rerun()
 
 if st.button("Focus on profit"):
-    s["cash"] += 15000
+    s["cash"] += 12000
     s["reputation"] -= 2
     s["month"] += 1
     st.rerun()
@@ -77,13 +80,15 @@ if st.button("Open second location"):
     s["month"] += 1
     st.rerun()
 
-if st.button("Take month slow"):
-    s["stress"] -= 5
+if st.button("Stabilize team"):
+    s["staff_morale"] += 5
+    s["stress"] -= 3
     s["month"] += 1
     st.rerun()
 
-# ---------- MONTHLY MONEY ----------
-production = s["patients"] * 12 + s["associates"] * 25000
-expenses = s["hygienists"] * 4000 + s["assistants"] * 3000 + s["loan"] * 0.01
+# ---------- MONTHLY ECONOMY ----------
+production = s["patients"] * 10 + s["associates"] * 22000
+expenses = s["hygienists"] * 4000 + s["assistants"] * 3000 + s["locations"] * 15000
 
 s["cash"] += production - expenses
+s["expansion_pressure"] += random.randint(1,4)
